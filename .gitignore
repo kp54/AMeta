@@ -1,3 +1,5 @@
 local/**
+.vscode/**
 .venv/**
 __pycache__/**
+
