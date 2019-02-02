@@ -14,10 +14,14 @@ def main():
 
     try:
         f = taglib.File(sys.argv[1])
-        for k, v in f.tags.items():
-            print(f'{k}: {v}')
-    finally:
-        f.close()
+    except OSError:
+        return -3
+    else:
+        try:
+            for k, v in f.tags.items():
+                print(f'{k}: {v}')
+        finally:
+            f.close()
 
 
 if __name__ == '__main__':
