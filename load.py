@@ -1,8 +1,15 @@
+import argparse
+import copy
+import csv
+import json
+import os
+import os.path
+
+import taglib
+
+
 def list_tree(path):
     # 返値は相対パス
-
-    import os
-    import os.path
 
     ret = list()
     que = os.listdir(path)
@@ -33,14 +40,10 @@ def absolutize_tree(tree, base):
 
 
 def filter_tree_ext(tree, exts):
-    import os.path
     return list(filter(lambda x: os.path.splitext(x)[1] in exts, tree))
 
 
 def extract_tags(path):
-    import copy
-    import taglib
-
     try:
         fp = taglib.File(path)
     except OSError:
@@ -56,13 +59,10 @@ def extract_tags(path):
 
 
 def dump_dict_json(dict_):
-    import json
     return json.dumps(dict_, ensure_ascii=False)
 
 
 def dump_list_csv(path, list_):
-    import csv
-
     with open(path, 'w', newline='') as fp:
         w = csv.writer(fp)
         for r in list_:
