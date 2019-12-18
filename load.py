@@ -58,19 +58,6 @@ def extract_tags(path):
     return ret
 
 
-def dump_dict_json(dict_):
-    return json.dumps(dict_, ensure_ascii=False)
-
-
-def dump_list_csv(path, list_):
-    with open(path, 'w', newline='') as fp:
-        w = csv.writer(fp)
-        for r in list_:
-            w.writerow(r)
-
-    return
-
-
 def main():
     with open('config.json') as fp:
         config = json.load(fp)
@@ -104,14 +91,17 @@ def main():
     ))
 
     meta_json_list_extra = list(map(
-        dump_dict_json,
+        lambda x: json.dumps(x, ensure_ascii=False),
         meta_dict_list_extra
     ))
 
     sheet = [header]+list(zip(
         tree_abs_audio, *zip(*meta_serial_list), meta_json_list_extra))
 
-    dump_list_csv('tags.csv', sheet)
+    with open('tags.csv', 'w', newline='') as fp:
+        w = csv.writer(fp)
+        for r in sheet:
+            w.writerow(r)
 
     return 0
 
