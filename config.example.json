@@ -1,0 +1,21 @@
+{
+    "path": "/path/to/library",
+    "extensions": [".flac", ".mp3"],
+    "columns": [
+        "TITLE",
+        "TITLESORT",
+        "ARTIST",
+        "ARTISTSORT",
+        "COMPOSER",
+        "DATE",
+        "GENRE",
+        "ALBUM",
+        "ALBUMSORT",
+        "ALBUMARTIST",
+        "ALBUMARTISTSORT",
+        "TRACKNUMBER",
+        "TOTALTRACKS",
+        "DISCNUMBER",
+        "DISCTOTAL"
+    ]
+}

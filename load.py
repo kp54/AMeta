@@ -72,32 +72,16 @@ def dump_list_csv(path, list_):
 
 
 def main():
-    PATH = '/path/to/library/'
-    EXTS = ['.flac', '.mp3']
-    COLS = [
-        'TITLE',
-        'TITLESORT',
-        'ARTIST',
-        'ARTISTSORT',
-        'COMPOSER',
-        'DATE',
-        'GENRE',
-        'ALBUM',
-        'ALBUMSORT',
-        'ALBUMARTIST',
-        'ALBUMARTISTSORT',
-        'TRACKNUMBER',
-        'TOTALTRACKS',
-        'DISCNUMBER',
-        'DISCTOTAL',
-    ]
-    HEADER = ['PATH'] + COLS + ['OTHERS']
+    with open('config.json') as fp:
+        config = json.load(fp)
 
-    tree = list_tree(PATH)
+    header = ['PATH'] + config['columns'] + ['OTHERS']
 
-    tree_abs = absolutize_tree(tree, PATH)
+    tree = list_tree(config['path'])
 
-    tree_abs_audio = filter_tree_ext(tree_abs, EXTS)
+    tree_abs = absolutize_tree(tree, config['path'])
+
+    tree_abs_audio = filter_tree_ext(tree_abs, config['extensions'])
 
     tree_abs_audio.sort()
 
@@ -107,13 +91,13 @@ def main():
     ))
 
     meta_serial_list = list(map(
-        lambda x: [x.get(i, [''])[0] for i in COLS],
+        lambda x: [x.get(i, [''])[0] for i in config['columns']],
         meta_dict_list
     ))
 
     meta_dict_list_extra = list(map(
         lambda x: dict(filter(
-            lambda y: y[0] not in COLS,
+            lambda y: y[0] not in config['columns'],
             x.items()
         )),
         meta_dict_list
@@ -124,15 +108,7 @@ def main():
         meta_dict_list_extra
     ))
 
-    # 以下のコードと等価
-    # sheet = [HEADER]
-    # for i in range(len(tree_abs_audio)):
-    #     sheet.append(
-    #         [tree_abs_audio[i]]
-    #         + meta_serial_list[i]
-    #         + [meta_json_list_extra[i]]
-    #     )
-    sheet = [HEADER]+list(zip(
+    sheet = [header]+list(zip(
         tree_abs_audio, *zip(*meta_serial_list), meta_json_list_extra))
 
     dump_list_csv('tags.csv', sheet)
