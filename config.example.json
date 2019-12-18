@@ -3,18 +3,14 @@
     "extensions": [".flac", ".mp3"],
     "columns": [
         "TITLE",
-        "TITLESORT",
         "ARTIST",
-        "ARTISTSORT",
         "COMPOSER",
         "DATE",
         "GENRE",
         "ALBUM",
-        "ALBUMSORT",
         "ALBUMARTIST",
-        "ALBUMARTISTSORT",
         "TRACKNUMBER",
-        "TOTALTRACKS",
+        "TRACKTOTAL",
         "DISCNUMBER",
         "DISCTOTAL"
     ]
