@@ -33,41 +33,6 @@ def parse_args():
     return parser.parse_args()
 
 
-def list_tree(path):
-    # 返値は相対パス
-
-    ret = list()
-    que = os.listdir(path)
-
-    while que:
-        tmp = que.pop(0)
-        tmq = os.path.join(path, tmp)
-
-        if os.path.isdir(tmq):
-            # 以下のコードと等価
-            # for i in os.listdir(tmq):
-            #     que.append(os.path.join(tmp, i))
-
-            que.extend(map(
-                lambda x: os.path.join(tmp, x),
-                os.listdir(tmq)
-            ))
-
-        elif os.path.isfile(tmq):
-            ret.append(tmp)
-
-    return ret
-
-
-def absolutize_tree(tree, base):
-    import os.path
-    return list(map(lambda x: os.path.join(base, x), tree))
-
-
-def filter_tree_ext(tree, exts):
-    return list(filter(lambda x: os.path.splitext(x)[1] in exts, tree))
-
-
 def extract_tags(path):
     try:
         fp = taglib.File(path)
@@ -94,42 +59,35 @@ def main():
             'columns': args.cols,
         }
     config['path'] = args.src
+    header = ['PATH'] + config['columns']
 
-    header = ['PATH'] + config['columns'] + ['OTHERS']
-
-    tree = list_tree(config['path'])
-
-    tree_abs = absolutize_tree(tree, config['path'])
-
-    tree_abs_audio = filter_tree_ext(tree_abs, config['extensions'])
-
-    tree_abs_audio.sort()
-
-    meta_dict_list = list(map(
-        extract_tags,
-        tree_abs_audio
+    extra = False
+    sheet = [header]
+    que = list(map(
+        lambda x: os.path.join(config['path'], x),
+        os.listdir(config['path'])
     ))
+    while que:
+        tmp = que.pop(0)
 
-    meta_serial_list = list(map(
-        lambda x: [x.get(i, [''])[0] for i in config['columns']],
-        meta_dict_list
-    ))
+        if os.path.isdir(tmp):
+            que.extend(map(
+                lambda x: os.path.join(tmp, x),
+                os.listdir(tmp)
+            ))
 
-    meta_dict_list_extra = list(map(
-        lambda x: dict(filter(
-            lambda y: y[0] not in config['columns'],
-            x.items()
-        )),
-        meta_dict_list
-    ))
-
-    meta_json_list_extra = list(map(
-        lambda x: json.dumps(x, ensure_ascii=False),
-        meta_dict_list_extra
-    ))
-
-    sheet = [header]+list(zip(
-        tree_abs_audio, *zip(*meta_serial_list), meta_json_list_extra))
+        elif os.path.isfile(tmp):
+            tags = extract_tags(tmp)
+            cols = [tmp]
+            for c in config['columns']:
+                if c in tags:
+                    cols.append(tags[c][0])
+                    del tags[c]
+                else:
+                    cols.append('')
+            for k, v in tags.items():
+                print(f'extra tag {k}:{v} in {tmp}')
+            sheet.append(cols)
 
     with open('tags.csv', 'w', newline='') as fp:
         w = csv.writer(fp)
