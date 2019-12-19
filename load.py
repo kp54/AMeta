@@ -8,6 +8,31 @@ import os.path
 import taglib
 
 
+def parse_args():
+    default_columns = [
+        "TITLE",
+        "ARTIST",
+        "COMPOSER",
+        "DATE",
+        "GENRE",
+        "ALBUM",
+        "ALBUMARTIST",
+        "TRACKNUMBER",
+        "TRACKTOTAL",
+        "DISCNUMBER",
+        "DISCTOTAL",
+    ]
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-o', '--out', help='output filename', default='tags.csv')
+    parser.add_argument('-c', '--config', help='config file', default=None)
+    parser.add_argument('--exts', help='file extesion(s)', default='.flac,.mp3')
+    parser.add_argument('--cols', help='tag name(s)', default=default_columns)
+    parser.add_argument('src', help='source directory')
+
+    return parser.parse_args()
+
+
 def list_tree(path):
     # 返値は相対パス
 
@@ -59,8 +84,16 @@ def extract_tags(path):
 
 
 def main():
-    with open('config.json') as fp:
-        config = json.load(fp)
+    args = parse_args()
+    if args.config:
+        with open('config.json') as fp:
+            config = json.load(fp)
+    else:
+        config = {
+            'extensions': args.exts.split(','),
+            'columns': args.cols,
+        }
+    config['path'] = args.src
 
     header = ['PATH'] + config['columns'] + ['OTHERS']
 
