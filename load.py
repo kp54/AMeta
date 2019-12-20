@@ -90,6 +90,9 @@ def main():
 
     if extra:
         header += ['OTHERS']
+        for r in sheet:
+            if len(header) != len(r):
+                r.append("{}")
 
     with open('tags.csv', 'w', newline='') as fp:
         w = csv.writer(fp)
