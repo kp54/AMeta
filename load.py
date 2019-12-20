@@ -47,7 +47,7 @@ def extract_tags(path):
 def main():
     args = parse_args()
     if args.config:
-        with open('config.json') as fp:
+        with open(args.config) as fp:
             config = json.load(fp)
     else:
         config = {
