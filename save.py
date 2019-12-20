@@ -1,15 +1,9 @@
-def load_list_csv(path):
-    import csv
+import csv
 
-    with open(path, 'r', newline='') as fp:
-        ret = list(csv.reader(fp))
-
-    return ret
+import taglib
 
 
 def overwrite_tags(path, tags):
-    import taglib
-
     try:
         fp = taglib.File(path)
     except OSError:
