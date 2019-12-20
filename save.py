@@ -4,17 +4,13 @@ import taglib
 
 
 def overwrite_tags(path, tags):
+    fp = None
     try:
         fp = taglib.File(path)
-    except OSError:
-        raise
-
-    else:
-        try:
-            fp.tags = tags
-            fp.save()
-
-        finally:
+        fp.tags = tags
+        fp.save()
+    finally:
+        if fp:
             fp.close()
     return
 
