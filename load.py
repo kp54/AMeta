@@ -34,16 +34,12 @@ def parse_args():
 
 
 def extract_tags(path):
+    fp = None
     try:
         fp = taglib.File(path)
-    except OSError:
-        raise
-
-    else:
-        try:
-            ret = copy.deepcopy(fp.tags)
-
-        finally:
+        ret = copy.deepcopy(fp.tags)
+    finally:
+        if fp:
             fp.close()
     return ret
 
