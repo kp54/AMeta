@@ -73,6 +73,8 @@ def main():
             ))
 
         elif os.path.isfile(tmp):
+            if os.path.splitext(tmp)[1] not in config['extensions']:
+                continue
             tags = extract_tags(tmp)
             cols = [tmp]
             for c in config['columns']:
