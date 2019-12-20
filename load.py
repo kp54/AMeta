@@ -81,9 +81,13 @@ def main():
                     del tags[c]
                 else:
                     cols.append('')
-            for k, v in tags.items():
-                print(f'extra tag {k}:{v} in {tmp}')
+            if tags:
+                extra = True
+                cols.append(json.dumps(tags, ensure_ascii=False))
             sheet.append(cols)
+
+    if extra:
+        header += ['OTHERS']
 
     with open('tags.csv', 'w', newline='') as fp:
         w = csv.writer(fp)
