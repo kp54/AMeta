@@ -16,7 +16,10 @@ def overwrite_tags(path, tags):
 
 
 def main():
-    sheet = load_list_csv('tags.csv')
+    with open('tags.csv') as fp:
+        rd = csv.reader(fp)
+        sheet = [list(r) for r in rd]
+
     # 1行目のヘッダを分離
     header, sheet = sheet[0][1:], sheet[1:]
 
