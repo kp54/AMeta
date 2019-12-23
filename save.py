@@ -1,6 +1,14 @@
+import argparse
 import csv
 
 import taglib
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('src', help='source file')
+
+    return parser.parse_args()
 
 
 def overwrite_tags(path, tags):
@@ -16,7 +24,10 @@ def overwrite_tags(path, tags):
 
 
 def main():
-    with open('tags.csv') as fp:
+    args = parse_args()
+    config['source'] = args.src
+
+    with open(config['source']) as fp:
         rd = csv.reader(fp)
         sheet = [list(r) for r in rd]
 
